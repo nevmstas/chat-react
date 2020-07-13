@@ -1,8 +1,21 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { useFormik } from 'formik';
 import EnterSchema from '../Validation/EnterScheme'
+import axios from 'axios'
 
-function EnterForm() {
+function EnterForm({ onLogin }) {
+    const [isLoading, setIsLoading] = useState(false)
+
+    const onEnter = async(roomId, userName) =>{
+        setIsLoading(true)
+        await axios.post('/rooms',{
+            roomId,
+            userName
+        })
+        onLogin()
+        
+    }
+
     const formik = useFormik({
         initialValues: {
            roomId: '',
@@ -10,7 +23,7 @@ function EnterForm() {
         },
         validationSchema: EnterSchema,
         onSubmit: (values, {resetForm}) => {
-            alert(JSON.stringify(values, null, 2))
+            onEnter(values.roomId, values.userName)
             resetForm()
         },
       });
@@ -36,7 +49,11 @@ function EnterForm() {
                     onChange={formik.handleChange}
                     value={formik.values.userName}
                 /> 
-                <button className="btn btn-primary" type="submit">Enter</button>
+                <button 
+                    className="btn btn-primary" 
+                    type="submit"
+                    disabled={isLoading&&true}
+                    >{isLoading?'...':'Enter'}</button>
         </form>
        </div>
        
