@@ -1,14 +1,14 @@
 import React from 'react'
 import { useFormik } from 'formik';
 
-function MessageForm() {
+function MessageForm({onSendMessage}) {
     const formik = useFormik({
         initialValues: {
            message: ''
         },
         onSubmit: (values, {resetForm}) => {
             resetForm()
-            alert(JSON.stringify(values))
+            onSendMessage(values.message)
         },
       });
     

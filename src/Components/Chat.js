@@ -1,32 +1,38 @@
 import React from 'react'
 import MessageForm from './MessageForm'
-export default function Chat() {
+import socket from '../socket'
+export default function Chat({ users, messages, userName, roomId, onAddMessage }) {
+
+    const onSendMessage = (messageValue) =>{
+        socket.emit('ROOM:NEW_MESSAGE', {
+            userName,
+            roomId,
+            text: messageValue
+        })
+        onAddMessage({userName, text: messageValue})
+    }
     return (
         <div className = "chat">
             <div className ="chat-users">
-                <b>Users (1):</b>
+                <b>Users ({users.length}):</b>
                 <ul>
-                    <li>Kek User</li>
+                    {users.map((user, index) => <li key={user + index}>{user}</li>)}
                 </ul>
                 
             </div>
 
             <div className ="chat-messages">
                 <div className="messages">
-                    <div className="message">
-                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-                        <div>
-                            <span>Kek User</span>
-                        </div>
-                    </div>
-                    <div className="message">
-                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-                        <div>
-                            <span>Kek User</span>
-                        </div>
-                    </div>
+                    { messages.map((message) =>
+                            <div className="message">
+                                <p>{message.text}</p>
+                                <div>
+                                    <span>{message.userName}</span>
+                                </div>
+                            </div>
+                        ) }
                 </div>
-                <MessageForm />
+                <MessageForm onSendMessage = {onSendMessage}/>
 
             </div>
         </div>
