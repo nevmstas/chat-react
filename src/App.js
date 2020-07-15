@@ -6,7 +6,7 @@ import socket from './socket'
 import axios from 'axios'
 
 import reducer from './redux/reducer'
-import { JOINED, SET_MESSAGES, NEW_MESSAGES, SET_USERS } from "./redux/types";
+import { JOINED, NEW_MESSAGES, SET_USERS, SET_DATA } from "./redux/types";
 
 
 function App() {
@@ -31,6 +31,10 @@ function App() {
     socket.emit('ROOM:JOIN', obj)
     const { data } = await axios.get(`/rooms/${obj.roomId}`)
     setUsers(data.users)
+    dispatch({
+      type: SET_DATA,
+      payload: data
+    })
   }
   const setUsers = (users)=>{
     dispatch({

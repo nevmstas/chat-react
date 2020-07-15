@@ -1,4 +1,4 @@
-import {JOINED, SET_MESSAGES, SET_USERS, NEW_MESSAGES} from './types'
+import {JOINED, SET_MESSAGES, SET_USERS, NEW_MESSAGES, SET_DATA} from './types'
 
 
 export default (state, action) =>{
@@ -24,6 +24,12 @@ export default (state, action) =>{
             return{
                 ...state,
                 messages: [...state.messages, action.payload]
+            }
+        case SET_DATA:
+            return{
+                ...state,
+                users: action.payload.users,
+                messages: action.payload.messages
             }
     
         default:
