@@ -1,12 +1,14 @@
-import {IS_AUTHENTICATED} from './types'
+import {JOINED} from './types'
 
 
 export default (state, action) =>{
     switch (action.type) {
-        case IS_AUTHENTICATED:
+        case JOINED:
             return {
                ...state,
-               isAuth: action.payload 
+               isJoined: true,
+               roomId: action.payload.roomId,
+               userName: action.payload.userName    
             }
 
     

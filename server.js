@@ -31,6 +31,17 @@ app.post('/rooms', (req, res) => {
 })
 
 io.on('connection', socket =>{
+    socket.on('ROOM:JOIN', ({roomId, userName}) => {
+        console.log(roomId)
+        //подключаемся к сокету(в определенную комнату)
+        socket.join(roomId)
+        //сохраняем в фейк базу
+        rooms.get(roomId).get('users').set(socket.id, userName)
+        //получили список всех пользователей (имена)
+        const users = [...rooms.get(roomId).get('users').values()]
+        //в опр-ю комнату отправить сокет запрос(broadcast - кроме меня)
+        socket.to(roomId).broadcast.emit('ROOM:JOINED', users)
+    })
     console.log('user connected', socket.id)
 })
 

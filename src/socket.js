@@ -1,3 +1,5 @@
 import io from 'socket.io-client'
 
-export const connectSocket = io()
+const connectSocket = io()
+
+export default connectSocket

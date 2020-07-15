@@ -1,26 +1,37 @@
-import React, {useReducer} from 'react';
+import React, {useReducer, useEffect} from 'react';
 import EnterForm from './Components/EnterForm'
-import {socket} from './socket'
+import Chat from './Components/Chat'
+import socket from './socket'
 
 import reducer from './redux/reducer'
-import { IS_AUTHENTICATED } from "./redux/types";
+import { JOINED } from "./redux/types";
 
 
 function App() {
   const [state, dispatch] = useReducer(reducer, {
-    isAuth: false
+    isJoined: false,
+    roomId: null,
+    userName: null
   })
 
-  const onLogin = () => {
+  const onLogin = (obj) => {
     dispatch({
-      type:IS_AUTHENTICATED,
-      payload:true
+      type:JOINED,
+      payload:obj
     })
+    socket.emit('ROOM:JOIN', obj)
   }
+
+  useEffect(() => {
+    socket.on('ROOM:JOINED', (users)=>{
+      console.log('new user:', users)
+    })
+  }, [])
+  
 
   return (
     <div className="wrapper">     
-        {!state.isAuth && <EnterForm onLogin={onLogin}/>}
+        {!state.isJoined ? <EnterForm onLogin={onLogin}/>: <Chat/>}
     </div>
   );
 }

@@ -7,12 +7,13 @@ function EnterForm({ onLogin }) {
     const [isLoading, setIsLoading] = useState(false)
 
     const onEnter = async(roomId, userName) =>{
-        setIsLoading(true)
-        await axios.post('/rooms',{
+        const obj = {
             roomId,
             userName
-        })
-        onLogin()
+        }
+        setIsLoading(true)
+        await axios.post('/rooms', obj)
+        onLogin(obj)
         
     }
 
